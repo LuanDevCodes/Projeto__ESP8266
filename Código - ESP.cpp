@@ -20,6 +20,7 @@ String porta         = "00 00 00 00"; // Cartão que abre/fecha a Porta
 bool portaAberta = false; // A porta começa fechada (falso)
  
 void setup() {
+
   Serial.begin(115200); // É a velocidade de comunicação da placa ESP padrão, é preciso pois com isso evitamos os ícones quebrados no terminal
   SPI.begin();
   mfrc522.PCD_Init(); // Inicializa o leitor de cartões
@@ -28,7 +29,7 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW); // A maquete começa com as luzes apagadas 
  
-  // CONFIGURAÇÃO DO MOTOR: Valores 500 e 2400 calibram o SG90 e evitam tremedeira
+  // configuração do motor: Valores 500 e 2400 calibram o SG90 e evitam tremedeira
   meuServoPorta.attach(SERVO_PIN, 500, 2400);
   meuServoPorta.write(90); // A porta começa trancada/centralizada em 90 graus
  
@@ -36,6 +37,7 @@ void setup() {
 }
  
 void loop() {
+
   // Verifica se há algum cartão se aproximando do leitor
   if (!mfrc522.PICC_IsNewCardPresent()) return;
   if (!mfrc522.PICC_ReadCardSerial()) return;
@@ -73,7 +75,7 @@ void loop() {
 
   else if (uidLida == porta || uidLida == uidAutorizado) {
     
-    // SEGURANÇA ELÉTRICA: Pausa de 300ms para a energia estabilizar
+    // segurança: Pausa de 300ms para a energia estabilizar
     delay(300); 
     
     if (portaAberta == false) { // Se a porta está fechada
@@ -98,7 +100,9 @@ void loop() {
   // ==========================================================
 
   else {
+    
     Serial.println("Acesso Negado!");
+    
     // Pisca os LEDs da casa 3 vezes rapidamente para avisar que o cartão é inválido
     for(int i = 0; i < 3; i++) {
       digitalWrite(LED_PIN, HIGH);
